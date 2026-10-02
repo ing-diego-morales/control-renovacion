@@ -1,0 +1,38 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+html, body, #app { margin: 0; min-height: 100%; }
+body { display: block; background: var(--color-slate-50); color: var(--color-slate-900); }
+#app { max-width: none; padding: 0; text-align: left; }
+
+/* ---------- Modo noche ---------- */
+.dark {
+  color-scheme: dark;
+
+  --color-slate-50: oklch(0.17 0.03 280);
+  --color-slate-100: oklch(0.28 0.03 280);
+  --color-slate-200: oklch(0.32 0.03 280);
+  --color-slate-300: oklch(0.4 0.03 280);
+  --color-slate-400: oklch(0.62 0.03 280);
+  --color-slate-500: oklch(0.72 0.02 280);
+  --color-slate-600: oklch(0.8 0.02 280);
+  --color-slate-700: oklch(0.87 0.015 280);
+  --color-slate-900: oklch(0.96 0.01 280);
+
+  --color-rose-50: oklch(0.27 0.06 15);
+  --color-rose-100: oklch(0.31 0.08 15);
+  --color-rose-700: oklch(0.82 0.1 15);
+
+  --color-amber-100: oklch(0.32 0.07 80);
+  --color-amber-800: oklch(0.87 0.1 85);
+
+  --color-emerald-50: oklch(0.27 0.05 165);
+  --color-emerald-100: oklch(0.31 0.07 165);
+  --color-emerald-700: oklch(0.83 0.1 165);
+
+  --color-indigo-50: oklch(0.28 0.06 275);
+  --color-indigo-100: oklch(0.32 0.08 275);
+  --color-indigo-700: oklch(0.82 0.09 275);
+}
+
+.dark .bg-white { background-color: oklch(0.23 0.035 280); }
