@@ -35,7 +35,7 @@ async function submit() {
   <div class="grid min-h-screen lg:grid-cols-2">
     <div class="hidden flex-col justify-between bg-indigo-950 p-12 text-indigo-100 lg:flex">
       <div class="flex items-center gap-2.5 text-white">
-        <span class="grid size-10 place-items-center rounded-lg bg-emerald-500"><Tv class="size-5" /></span>
+        <img src="/logo.png" alt="Logo de la empresa" class="mx-auto max-h-16 w-auto object-contain" @error="logoOk = false" />
         <span class="text-xl font-semibold">Control Streaming</span>
       </div>
       <div>

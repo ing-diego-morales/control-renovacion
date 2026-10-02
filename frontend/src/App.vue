@@ -7,8 +7,8 @@ import Footer from "./components/Footer.vue";
 import ExpiredAlert from "./components/ExpiredAlert.vue";
 
 const route = useRoute();
-const open = ref(false); // menú en celular
-const collapsed = ref(localStorage.getItem("sidebar") === "closed"); // menú oculto en computador
+const open = ref(false);
+const collapsed = ref(localStorage.getItem("sidebar") === "closed");
 const isPublic = computed(() => !!route.meta.public);
 
 function toggleMenu() {

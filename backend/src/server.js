@@ -60,7 +60,6 @@ app.listen(process.env.PORT, () => {
       `  → Inicia MySQL en XAMPP y revisa DB_HOST, DB_USER, DB_PASSWORD y DB_NAME en backend/.env`
     ));
 
-  // Papelera: borra sola las cuentas con más de 30 días (al arrancar y cada 6 horas)
   const runPurge = () =>
     purgeTrash()
       .then((n) => n && console.log(`Papelera: ${n} cuentas eliminadas por superar 30 días`))

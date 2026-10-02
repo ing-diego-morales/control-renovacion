@@ -25,7 +25,6 @@ const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0
 const inDays = (n) => { const d = new Date(); d.setDate(d.getDate() + n); return ymd(d) }
 const inputCls = 'mt-1 w-full rounded-lg border border-slate-300 px-3 py-2'
 
-// ---------- Lista ----------
 const rows = ref([])
 const total = ref(0)
 const page = ref(1)
@@ -64,14 +63,12 @@ watch(() => route.query.state, (s) => { state.value = s || '' })
 watch(page, load)
 onMounted(load)
 
-// ---------- Selección ----------
 const allOnPage = computed(() => rows.value.length > 0 && rows.value.every((r) => selected.value.includes(r.id)))
 const toggleAll = () => { selected.value = allOnPage.value ? [] : rows.value.map((r) => r.id) }
 const toggle = (id) => {
   selected.value = selected.value.includes(id) ? selected.value.filter((x) => x !== id) : [...selected.value, id]
 }
 
-// ---------- Nuevo alquiler ----------
 const showNew = ref(false)
 const customers = ref([])
 const products = ref([])
@@ -97,7 +94,6 @@ async function openNew() {
   }
 }
 
-// Al elegir servicio: precio del producto, vencimiento según su duración y cuántas cuentas libres hay
 watch(() => nf.product_id, async (id) => {
   freeCount.value = null
   const p = products.value.find((x) => x.id === id)
@@ -133,7 +129,6 @@ async function saveNew() {
   }
 }
 
-// ---------- Renovar ----------
 const renewIds = ref([])
 const renewError = ref('')
 const renew = reactive({ mode: 'days', days: 30, date: '' })
@@ -164,7 +159,6 @@ async function confirmRenew() {
   }
 }
 
-// ---------- Cortar ----------
 const cutIds = ref([])
 const cutError = ref('')
 const cut = reactive({ action: 'free', reason: 'down' })
@@ -188,7 +182,6 @@ async function confirmCut() {
   }
 }
 
-// ---------- Corregir (precio y vencimiento) ----------
 const editRow = ref(null)
 const editError = ref('')
 const ef = reactive({ price: 0, end_date: '' })

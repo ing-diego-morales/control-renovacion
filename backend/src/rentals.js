@@ -3,7 +3,6 @@ import { pool } from './db.js';
 
 const REASONS = ['down', 'changed', 'stolen', 'other'];
 
-// Alquiler + cliente + cuenta + servicio, con estado y días restantes
 export const RENTAL_SELECT = `
   SELECT rt.*, c.name AS customer_name, c.phone AS customer_phone,
          a.email AS account_email, p.name AS product_name,
@@ -21,7 +20,6 @@ export const RENTAL_SELECT = `
 
 const router = Router();
 
-// ---------- Aviso de vencidos sin cortar (agrupado por cliente) ----------
 router.get('/alerts', async (req, res, next) => {
   try {
     const [rows] = await pool.query(
@@ -35,7 +33,6 @@ router.get('/alerts', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-// ---------- Lista paginada: ?state=expired&q=ana&page=1&limit=25 ----------
 router.get('/', async (req, res, next) => {
   try {
     const page = Math.max(1, Number(req.query.page) || 1);
@@ -58,7 +55,6 @@ router.get('/', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-// ---------- Crear: cliente + servicio + cantidad (asigna cuentas libres solas) ----------
 router.post('/', async (req, res, next) => {
   const conn = await pool.getConnection();
   try {
@@ -71,7 +67,6 @@ router.post('/', async (req, res, next) => {
 
     await conn.beginTransaction();
 
-    // Toma las cuentas libres más antiguas y las bloquea para que nadie las asigne dos veces
     const [free] = await conn.query(
       `SELECT a.id FROM accounts a
        WHERE a.product_id = ? AND a.deleted_at IS NULL AND a.is_down = 0
@@ -104,12 +99,10 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// ---------- Renovar uno o varios: { ids, days } o { ids, end_date } ----------
 router.post('/renew', async (req, res, next) => {
   try {
     const { ids = [], days = 30, end_date = null } = req.body;
     if (!Array.isArray(ids) || !ids.length) return res.status(400).json({ error: 'No hay alquileres seleccionados' });
-    // Con días: suma desde el vencimiento (o desde hoy si ya venció). Con fecha: usa esa fecha exacta
     const [r] = await pool.query(
       `UPDATE rentals
        SET end_date = COALESCE(?, DATE_ADD(GREATEST(end_date, CURDATE()), INTERVAL ? DAY))
@@ -120,7 +113,6 @@ router.post('/renew', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-// ---------- Cortar uno o varios: { ids, account_action: 'free' | 'down' | 'trash', reason } ----------
 router.post('/cancel', async (req, res, next) => {
   const conn = await pool.getConnection();
   try {
@@ -156,7 +148,6 @@ router.post('/cancel', async (req, res, next) => {
   }
 });
 
-// ---------- Corregir un alquiler (precio y vencimiento) ----------
 router.put('/:id', async (req, res, next) => {
   try {
     const { price, end_date } = req.body;

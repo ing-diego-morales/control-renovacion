@@ -31,7 +31,6 @@ const totalFree = computed(() =>
   (data.value?.free ?? []).reduce((s, r) => s + Number(r.total), 0),
 );
 
-// Agrupa las cuentas libres por categoría y, dentro, por servicio
 const byCategory = computed(() => {
   const map = new Map();
   for (const r of data.value?.free ?? []) {

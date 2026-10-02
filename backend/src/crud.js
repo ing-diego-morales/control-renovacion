@@ -1,8 +1,6 @@
 import { Router } from 'express';
 import { pool } from './db.js';
 
-// table: nombre de la tabla | fields: columnas editables | searchFields: columnas para ?q=
-// select: consulta base opcional (para hacer JOIN)
 export function crudRouter({ table, fields, searchFields = [], required = [], select }) {
   const router = Router();
 

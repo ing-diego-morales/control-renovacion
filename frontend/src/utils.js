@@ -6,13 +6,11 @@ export const money = new Intl.NumberFormat('es-CO', {
   maximumFractionDigits: 0,
 })
 
-// "+573001234567" -> "+57 300 1234567"
 export function formatPhone(p) {
   const n = p ? parsePhoneNumberFromString(p) : null
   return n ? n.formatInternational() : p || '—'
 }
 
-// El teléfono ya se guarda con el código del país, solo se limpian los símbolos
 export function whatsappUrl(r) {
   const phone = (r.customer_phone || '').replace(/\D/g, '')
   const msg = r.days_left < 0
@@ -30,7 +28,6 @@ export const trashReasons = [
 
 export const reasonLabel = (v) => trashReasons.find((r) => r.value === v)?.label || '—'
 
-// Días restantes -> texto y color de advertencia
 export function daysChip(d) {
   const n = Number(d)
   if (n < 0) return { text: `Vencida hace ${-n} ${-n === 1 ? 'día' : 'días'}`, cls: 'bg-rose-100 text-rose-700' }

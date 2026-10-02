@@ -24,7 +24,6 @@ const sorts = [
   { value: 'days_desc', label: 'Vencen al final (más días)' },
 ]
 
-// ---------- Lista ----------
 const rows = ref([])
 const total = ref(0)
 const counts = reactive({ free: 0, assigned: 0, down: 0 })
@@ -75,14 +74,12 @@ onMounted(async () => {
   try { products.value = await api.get('/products') } catch (e) { error.value = e.message }
 })
 
-// ---------- Selección ----------
 const allOnPage = computed(() => rows.value.length > 0 && rows.value.every((r) => selected.value.includes(r.id)))
 const toggleAll = () => { selected.value = allOnPage.value ? [] : rows.value.map((r) => r.id) }
 const toggle = (id) => {
   selected.value = selected.value.includes(id) ? selected.value.filter((x) => x !== id) : [...selected.value, id]
 }
 
-// ---------- Agregar / editar una cuenta ----------
 const showForm = ref(false)
 const editingId = ref(null)
 const saving = ref(false)
@@ -123,14 +120,12 @@ async function save() {
   }
 }
 
-// ---------- Carga masiva ----------
 const showBulk = ref(false)
 const bulk = reactive({ product_id: '', text: '' })
 const bulkResult = ref(null)
 const bulkError = ref('')
 const uploading = ref(false)
 
-// Acepta "correo contraseña", "correo:contraseña", "correo,contraseña" o dos columnas pegadas desde Excel
 function parseBulk(text) {
   const ok = []
   const bad = []
@@ -168,13 +163,11 @@ async function uploadBulk() {
   }
 }
 
-// ---------- Caída ----------
 async function setDown(r, down) {
   try { await api.post(`/accounts/${r.id}/down`, { down }); await load() }
   catch (e) { error.value = e.message }
 }
 
-// ---------- Papelera ----------
 const trashIds = ref([])
 const trashReason = ref('down')
 

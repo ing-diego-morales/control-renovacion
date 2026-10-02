@@ -13,7 +13,6 @@ const countries = getCountries()
 const country = ref('CO')
 const text = ref('')
 
-// Al editar, separa el número guardado en país + número
 if (props.modelValue) {
   const p = parsePhoneNumberFromString(props.modelValue)
   if (p?.country) {
@@ -27,7 +26,6 @@ if (props.modelValue) {
 const parsed = computed(() => (text.value ? parsePhoneNumberFromString(text.value, country.value) : null))
 const valid = computed(() => !!parsed.value?.isValid())
 
-// Emite el número internacional solo si es válido; si no, vacío
 watch([parsed, valid], () => emit('update:modelValue', valid.value ? parsed.value.number : ''))
 
 function onInput(e) {

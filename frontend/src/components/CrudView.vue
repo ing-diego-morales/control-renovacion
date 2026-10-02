@@ -14,7 +14,6 @@ const props = defineProps({
   pageSize: { type: Number, default: 15 },
 })
 
-// ---------- Lista ----------
 const rows = ref([])
 const loading = ref(false)
 const error = ref('')
@@ -54,7 +53,6 @@ function sortBy(col) {
   else { sort.key = col.key; sort.dir = 1 }
 }
 
-// ---------- Opciones de los campos tipo select ----------
 const opts = reactive({})
 async function loadOptions() {
   for (const f of props.fields) {
@@ -65,7 +63,6 @@ async function loadOptions() {
 
 onMounted(() => { load(); loadOptions() })
 
-// ---------- Formulario ----------
 const showForm = ref(false)
 const editingId = ref(null)
 const saving = ref(false)

@@ -24,7 +24,6 @@ async function req(path, { method = 'GET', body } = {}) {
   if (res.status === 204) return null
   const data = await res.json().catch(() => ({}))
 
-  // Sesión vencida: vuelve al login
   if (res.status === 401 && path !== '/auth/login') {
     clearSession()
     window.location.assign('/login')

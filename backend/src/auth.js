@@ -10,7 +10,6 @@ if (!SECRET) {
   process.exit(1);
 }
 
-// Protege las rutas: exige un token válido
 export const requireAuth = (req, res, next) => {
   const token = (req.headers.authorization || '').replace(/^Bearer /, '');
   try {
@@ -21,7 +20,6 @@ export const requireAuth = (req, res, next) => {
   }
 };
 
-// Límite simple: 10 intentos de login cada 15 minutos por IP
 const attempts = new Map();
 const WINDOW = 15 * 60 * 1000;
 

@@ -4,8 +4,6 @@ import { pool } from "./db.js";
 const REASONS = ["down", "changed", "stolen", "other"];
 const router = Router();
 
-// Cuenta + servicio + categoría + (si está alquilada) cliente y vencimiento.
-// Estado: caída > asignada > libre
 const BASE = `
   SELECT a.id, a.product_id, a.email, a.password, a.cost, a.is_down, a.notes, a.created_at,
          p.name AS product_name,
@@ -31,7 +29,6 @@ async function isDuplicate(productId, email, excludeId = 0) {
   return rows.length > 0;
 }
 
-// Borra definitivamente las cuentas de la papelera (solo si no tienen alquiler activo)
 export async function purgeTrash({ onlyExpired = true } = {}) {
   const [rows] = await pool.query(
     `SELECT id FROM accounts
@@ -46,7 +43,6 @@ export async function purgeTrash({ onlyExpired = true } = {}) {
   return res.affectedRows;
 }
 
-// ---------- Lista (paginada, con filtros y conteos por estado) ----------
 router.get("/", async (req, res, next) => {
   try {
     const page = Math.max(1, Number(req.query.page) || 1);
@@ -98,7 +94,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// ---------- Papelera: lista ----------
 router.get("/trash", async (req, res, next) => {
   try {
     const page = Math.max(1, Number(req.query.page) || 1);
@@ -130,7 +125,6 @@ router.get("/trash", async (req, res, next) => {
   }
 });
 
-// ---------- Crear una cuenta (siempre entra como libre) ----------
 router.post("/", async (req, res, next) => {
   try {
     const {
@@ -160,7 +154,6 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// ---------- Carga masiva ----------
 router.post("/bulk", async (req, res, next) => {
   try {
     const { product_id, cost = 0, items = [] } = req.body;
@@ -212,7 +205,6 @@ router.post("/bulk", async (req, res, next) => {
   }
 });
 
-// ---------- Enviar a la papelera (una o varias) ----------
 router.post("/trash-many", async (req, res, next) => {
   try {
     const { ids = [], reason } = req.body;
@@ -220,7 +212,6 @@ router.post("/trash-many", async (req, res, next) => {
       return res.status(400).json({ error: "Motivo no válido" });
     if (!Array.isArray(ids) || !ids.length)
       return res.status(400).json({ error: "No hay cuentas seleccionadas" });
-    // Las que están asignadas a un cliente no se mueven
     const [r] = await pool.query(
       `UPDATE accounts SET deleted_at = NOW(), delete_reason = ?
        WHERE id IN (?) AND deleted_at IS NULL
@@ -233,7 +224,6 @@ router.post("/trash-many", async (req, res, next) => {
   }
 });
 
-// ---------- Vaciar papelera ----------
 router.delete("/trash", async (req, res, next) => {
   try {
     res.json({ deleted: await purgeTrash({ onlyExpired: false }) });
@@ -242,7 +232,6 @@ router.delete("/trash", async (req, res, next) => {
   }
 });
 
-// ---------- Editar ----------
 router.put("/:id", async (req, res, next) => {
   try {
     const id = Number(req.params.id);
@@ -283,7 +272,6 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-// ---------- Marcar / quitar "caída" ----------
 router.post("/:id/down", async (req, res, next) => {
   try {
     const [r] = await pool.query(
@@ -298,7 +286,6 @@ router.post("/:id/down", async (req, res, next) => {
   }
 });
 
-// ---------- Restaurar desde la papelera ----------
 router.post("/:id/restore", async (req, res, next) => {
   try {
     const [r] = await pool.query(
@@ -314,7 +301,6 @@ router.post("/:id/restore", async (req, res, next) => {
   }
 });
 
-// ---------- Eliminar definitivamente una cuenta de la papelera ----------
 router.delete("/:id/purge", async (req, res, next) => {
   try {
     const id = Number(req.params.id);

@@ -39,7 +39,6 @@ api.get('/dashboard', async (req, res, next) => {
        WHERE status = 'active' AND days_left <= 7
        ORDER BY end_date ASC LIMIT 50`);
 
-    // Cuentas libres: sin alquiler activo, no caídas y fuera de la papelera
     const [free] = await pool.query(`
       SELECT COALESCE(c.name, 'Sin categoría') AS category_name,
              p.id AS product_id, p.name AS product_name, COUNT(*) AS total
